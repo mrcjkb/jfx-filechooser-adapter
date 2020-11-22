@@ -1,10 +1,7 @@
-import java.text.SimpleDateFormat
-import java.util.*
-
 plugins {
   java
   idea
-  id("org.openjfx.javafxplugin") version "0.0.8"
+  id("org.openjfx.javafxplugin") version "0.0.9"
   kotlin("jvm") version "1.4.10"
   id("org.jetbrains.kotlin.plugin.jpa") version "1.4.10"
   id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
@@ -30,6 +27,7 @@ dependencies {
 java {
   sourceCompatibility = JavaVersion.VERSION_11
   targetCompatibility = JavaVersion.VERSION_11
+  modularity.inferModulePath.set(true)
 }
 
 javafx {
