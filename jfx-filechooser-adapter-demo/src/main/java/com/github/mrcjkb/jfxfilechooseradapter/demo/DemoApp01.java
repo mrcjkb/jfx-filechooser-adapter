@@ -29,6 +29,7 @@ public class DemoApp01 extends JFrame {
                 pack();
             }
         });
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     public static void main(String[] args) {
