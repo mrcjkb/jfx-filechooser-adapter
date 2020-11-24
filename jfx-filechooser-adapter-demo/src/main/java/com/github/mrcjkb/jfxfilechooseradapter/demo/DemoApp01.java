@@ -11,7 +11,9 @@ public class DemoApp01 extends JFrame {
         getContentPane().setLayout(new BorderLayout());
         var fileChooserButton = new JButton("Choose file...");
         var textPane = new JTextPane();
+        var label = new JLabel("Please choose a file...");
         textPane.setEditable(false);
+        getContentPane().add(label, BorderLayout.NORTH);
         getContentPane().add(textPane, BorderLayout.CENTER);
         getContentPane().add(fileChooserButton, BorderLayout.EAST);
         var fileChooserAdapter = new JfxFileChooserAdapterModuleContext()
@@ -22,13 +24,16 @@ public class DemoApp01 extends JFrame {
                     .withTitle("Choose a file...")
                     .showOpenFileDialog()
                     .getFile();
-            textPane.setText(file.getAbsolutePath());
+            if (null != file) {
+                textPane.setText(file.getAbsolutePath());
+                pack();
+            }
         });
-
-
     }
 
     public static void main(String[] args) {
-        new DemoApp01().setVisible(true);
+        var app = new DemoApp01();
+        app.setVisible(true);
+        app.pack();
     }
 }
