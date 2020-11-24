@@ -1,0 +1,1 @@
+rootProject.name = "jfx-filechooser-adapter-api"
