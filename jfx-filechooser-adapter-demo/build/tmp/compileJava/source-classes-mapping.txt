@@ -1,0 +1,4 @@
+com/github/mrcjkb/jfxfilechooseradapter/demo/DemoApp01.java
+ com.github.mrcjkb.jfxfilechooseradapter.demo.DemoApp01
+module-info.java
+ module-info
