@@ -1,5 +1,6 @@
 import java.text.SimpleDateFormat
 import java.util.*
+import org.gradle.api.publish.maven.MavenPom
 
 plugins {
   java
@@ -77,9 +78,27 @@ publishing {
       groupId = group.toString()
       artifactId = rootProject.name
       version = version
+      customizePom(pom)
       from(components["java"])
       artifact(sourcesJar.get())
       artifact(javadocJar.get())
+    }
+  }
+}
+
+fun customizePom(pom: MavenPom) {
+  with (pom) {
+    name.set(rootProject.name)
+    description.set(rootProject.description)
+    url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
+    issueManagement {
+      system.set("GitHub")
+      url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/issues")
+    }
+    scm {
+      url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
+      connection.set("scm:git:git@github.com:MrcJkb/jfx-filechooser-adapter.git")
+      developerConnection.set("scm:git:ssh://git@github.com:MrcJkb/jfx-filechooser-adapter.git")
     }
   }
 }
