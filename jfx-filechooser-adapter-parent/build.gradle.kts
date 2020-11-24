@@ -27,7 +27,7 @@ java {
   targetCompatibility = JavaVersion.VERSION_11
   modularity.inferModulePath.set(true)
   toolchain {
-    languageVersion = JavaLanguageVersion.of(11)
+    languageVersion.set(JavaLanguageVersion.of(11))
   }
 }
 
