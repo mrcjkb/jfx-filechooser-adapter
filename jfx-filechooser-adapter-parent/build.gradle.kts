@@ -23,8 +23,6 @@ dependencies {
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_11
-  targetCompatibility = JavaVersion.VERSION_11
   modularity.inferModulePath.set(true)
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(11))
