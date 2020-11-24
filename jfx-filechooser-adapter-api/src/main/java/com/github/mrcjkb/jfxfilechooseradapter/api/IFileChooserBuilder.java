@@ -34,7 +34,7 @@ public interface IFileChooserBuilder {
     interface Initialised {
         /**
          * [Optional] Sets the file chooser's initial directory.
-         * If this method is used, the initial directory is set to the last chosen directory, if applicable.
+         * If this method is not called, the initial directory is set to the last chosen directory, if applicable.
          * @param initialDirectory the initial directory to set
          * @return this builder, with the initial directory set
          */
