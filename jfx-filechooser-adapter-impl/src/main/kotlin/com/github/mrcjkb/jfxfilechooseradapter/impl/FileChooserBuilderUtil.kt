@@ -2,6 +2,8 @@ package com.github.mrcjkb.jfxfilechooseradapter.impl
 
 import javafx.application.Platform
 import java.awt.Dialog
+import java.awt.GraphicsDevice
+import java.awt.Window
 import java.io.File
 import java.lang.Exception
 import java.lang.IllegalStateException
@@ -20,8 +22,8 @@ fun getLowerCaseExtension(filePart: String?) : String {
             ?:run { "" }
 }
 
-fun <T> runPlatformTaskAndBlockEdt(callback: () -> T?): T? {
-    val invisibleModalSwingDialog = buildInvisibleModalSwingDialog()
+fun <T> runPlatformTaskAndBlockEdt(callback: () -> T?, parentWindow: Window?): T? {
+    val invisibleModalSwingDialog = buildInvisibleModalSwingDialog(parentWindow)
     val dialogLatch = CountDownLatch(1)
     val futureTaskLatch = CountDownLatch(1)
     val futureTask = FutureTask {
@@ -60,11 +62,13 @@ fun <T> runPlatformTaskAndBlockEdt(callback: () -> T?): T? {
     return null
 }
 
-fun buildInvisibleModalSwingDialog(): Dialog {
-    val swingModalDialog = JDialog()
+fun buildInvisibleModalSwingDialog(parentWindow: Window?): Dialog {
+    val swingModalDialog = JDialog(parentWindow)
     swingModalDialog.isModal = true
     swingModalDialog.isUndecorated = true
-    swingModalDialog.opacity = 0.0f
+    if (swingModalDialog.graphicsConfiguration.device.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
+        swingModalDialog.opacity = 0.0f
+    }
     swingModalDialog.defaultCloseOperation = WindowConstants.DO_NOTHING_ON_CLOSE
     return swingModalDialog
 }

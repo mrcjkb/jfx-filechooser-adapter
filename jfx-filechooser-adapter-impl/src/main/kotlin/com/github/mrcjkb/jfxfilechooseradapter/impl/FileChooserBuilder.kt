@@ -129,7 +129,7 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
         }
         fileChooser.title = title
         directoryChooser.title = title
-        return runPlatformTaskAndBlockEdt(callback)
+        return runPlatformTaskAndBlockEdt(callback, swingParentWindow)
     }
 
     private fun getJfxParentWindow(): javafx.stage.Window? {
