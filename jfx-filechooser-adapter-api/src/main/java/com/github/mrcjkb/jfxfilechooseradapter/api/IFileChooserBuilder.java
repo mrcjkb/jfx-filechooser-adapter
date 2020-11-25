@@ -9,8 +9,6 @@ import java.util.function.Consumer;
 
 public interface IFileChooserBuilder {
 
-    interface Compound extends IFileChooserBuilder, Initialised, WithInitialDirectory, WithTitle, WithFile, WithFileList, WithDirectory {}
-
     /**
      * Pass a callback function that adds a {@link JComponent} to a Swing {@link Container} so that its parent window can be identified for the file chooser.
      * @param addToSwingParentCallback a callback that adds the provided {@link JComponent} to a child of the file chooser's parent window. The provided {@link JComponent} does not have any children and will not be shown.
@@ -31,9 +29,27 @@ public interface IFileChooserBuilder {
      */
     Initialised init(String identifier);
 
-    interface Initialised {
+    interface AbstractFileAndDirectoryChooserBuilderInterface {
         /**
-         * [Optional] Sets the file chooser's initial directory.
+         * Sets the title of the file chooser dialog.
+         * @param title the title to set
+         * @return this builder, with the title set
+         */
+        FileAndDirectoryChooser withTitle(String title);
+    }
+
+    interface AbstractFileChooserBuilderInterface {
+        /**
+         * Sets the title of the file chooser dialog.
+         * @param title the title to set
+         * @return this builder, with the title set
+         */
+        FileChooser withTitle(String title);
+    }
+
+    interface Initialised extends AbstractFileAndDirectoryChooserBuilderInterface {
+        /**
+         * [Optional] Sets the file or directory chooser's initial directory.
          * If this method is not called, the initial directory is set to the last chosen directory, if applicable.
          * @param initialDirectory the initial directory to set
          * @return this builder, with the initial directory set
@@ -41,30 +57,43 @@ public interface IFileChooserBuilder {
         WithInitialDirectory withInitialDirectory(File initialDirectory);
 
         /**
-         * Sets the title of the file chooser dialog.
-         * @param title the title to set
-         * @return this builder, with the title set
+         * [Optional] Sets the file chooser's initial file name.
+         * @param initialFileName the initial file name to set
+         * @return this builder, with the initial file name set
          */
-        WithTitle withTitle(String title);
+        WithInitialFileName withInitialFileName(String initialFileName);
     }
 
-    interface WithInitialDirectory {
+    interface WithInitialDirectory extends AbstractFileAndDirectoryChooserBuilderInterface {
         /**
-         * Sets the title of the file chooser dialog.
-         * @param title the title to set
-         * @return this builder, with the title set
+         * [Optional] Sets the file chooser's initial file name.
+         * @param initialFileName the initial file name to set
+         * @return this builder, with the initial file name set
          */
-        WithTitle withTitle(String title);
+        WithInitialDirectoryAndInitialFileName withInitialFileName(String initialFileName);
     }
 
-    interface WithTitle {
+    interface WithInitialFileName extends AbstractFileChooserBuilderInterface {
+        /**
+         * [Optional] Sets the file chooser's initial directory.
+         * If this method is not called, the initial directory is set to the last chosen directory, if applicable.
+         * @param initialDirectory the initial directory to set
+         * @return this builder, with the initial directory set
+         */
+        WithInitialDirectoryAndInitialFileName withInitialDirectory(File initialDirectory);
+    }
+
+    interface WithInitialDirectoryAndInitialFileName extends AbstractFileChooserBuilderInterface {
+    }
+
+    interface FileChooser {
         /**
          * Adds an extension filter to the file chooser.
          * @param extensionFilterDescription the description of the extension filter
          * @param extensions a {@link List} of extensions
          * @return this builder, with the extension filter
          */
-        WithTitle addExtensionFilter(String extensionFilterDescription, List<String> extensions);
+        FileChooser addExtensionFilter(String extensionFilterDescription, List<String> extensions);
 
         /**
          * Shows a "save file" dialog, and blocks until the user has selected a file or cancelled.
@@ -82,7 +111,9 @@ public interface IFileChooserBuilder {
          * @return this builder, with the selected files, or {@code null} if no file was selected or the user cancelled
          */
         WithFileList showOpenMultipleFilesDialog();
+    }
 
+    interface FileAndDirectoryChooser extends FileChooser {
         /**
          * Shows an "open directory" dialog, and blocks until the user has selected a directory or cancelled.
          * @return this builder, with the selected directory, or {@code null} if no directory was selected or the user cancelled

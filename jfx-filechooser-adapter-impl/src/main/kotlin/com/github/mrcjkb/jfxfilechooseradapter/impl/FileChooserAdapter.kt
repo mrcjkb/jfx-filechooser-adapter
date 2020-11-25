@@ -10,6 +10,7 @@ class FileChooserAdapter(private val javaFxSwingAdapter: IJavaFxChooserAdapterIn
 
     private val fileChooser: FileChooser = FileChooser()
     override var selectedExtensionFilter: KExtensionFilter? = null
+    override var initialFileName: String? = null
 
     override fun showSaveDialog(): File? {
         return showDialog { fileChooser.showSaveDialog(javaFxSwingAdapter.javaFxParentWindow) }
@@ -26,6 +27,7 @@ class FileChooserAdapter(private val javaFxSwingAdapter: IJavaFxChooserAdapterIn
     private fun <T> showDialog(callback: () -> T?): T? {
         initialDirectory?.takeIf { it.isDirectory }.let { fileChooser.initialDirectory = it }
         title.let { fileChooser.title = it }
+        initialFileName.let { fileChooser.initialFileName = initialFileName }
         translateExtensionFilters()
         val retVal = runPlatformTaskAndBlockEdt(callback, javaFxSwingAdapter.swingParentWindow)
         translateSelectedExtensionFilter()

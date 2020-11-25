@@ -2,9 +2,9 @@ package com.github.mrcjkb.jfxfilechooseradapter.impl
 
 import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IDirectoryChooserAdapter
 import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IFileChooserAdapter
-import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder
 import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IJavaFxChooserAdapter
-import javafx.application.Platform
+import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder
+import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder.*
 import java.io.File
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
@@ -12,7 +12,7 @@ import java.util.function.Consumer
 import java.util.prefs.Preferences
 import javax.swing.JComponent
 
-class FileChooserBuilder: IFileChooserBuilder.Compound {
+class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName, WithInitialDirectory, WithInitialDirectoryAndInitialFileName, FileChooser, FileAndDirectoryChooser, WithFile, WithFileList, WithDirectory {
 
     private val javaFxChooserAdapter: IJavaFxChooserAdapter
     private val fileChooser: IFileChooserAdapter
@@ -21,7 +21,6 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
     private var title: String? = null
     private var selectedFile: File? = null
     private var selectedFiles: List<File>? = null
-    private var initialDirectory: File? = null
 
     init {
         javaFxChooserAdapter = JavaFxChooserAdapter()
@@ -41,11 +40,19 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
     override fun init(identifier: String?): FileChooserBuilder {
         preferences = Preferences.userRoot().node(identifier)
         fileChooser.extensionFilters.clear()
+        javaFxChooserAdapter.title = null
+        javaFxChooserAdapter.initialDirectory = null
+        fileChooser.initialFileName = null
         return this
     }
 
     override fun withInitialDirectory(initialDirectory: File?): FileChooserBuilder {
-        this.initialDirectory = initialDirectory
+        javaFxChooserAdapter.initialDirectory = initialDirectory
+        return this
+    }
+
+    override fun withInitialFileName(initialFileName: String?): FileChooserBuilder {
+        fileChooser.initialFileName = initialFileName
         return this
     }
 
@@ -74,7 +81,7 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
         return this
     }
 
-    override fun showOpenDirectoryDialog(): IFileChooserBuilder.WithDirectory {
+    override fun showOpenDirectoryDialog(): FileChooserBuilder {
         selectedFile = showDialog { directoryChooser.showDialog() }
         return this
     }
@@ -114,7 +121,7 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
     }
 
     private fun <T> showDialog(callback: () -> T?): T? {
-        javaFxChooserAdapter.initialDirectory = initialDirectory ?: preferences["lastChosenDirectory", null] ?. let { File(it) }
+        javaFxChooserAdapter.initialDirectory = javaFxChooserAdapter.initialDirectory ?: preferences["lastChosenDirectory", null] ?. let { File(it) }
         javaFxChooserAdapter.title = title
         return callback.invoke()
     }
