@@ -1,45 +1,36 @@
 package com.github.mrcjkb.jfxfilechooseradapter.impl
 
+import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IDirectoryChooserAdapter
+import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IFileChooserAdapter
 import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder
+import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IJavaFxChooserAdapter
 import javafx.application.Platform
-import javafx.embed.swing.JFXPanel
-import javafx.scene.Group
-import javafx.scene.Scene
-import javafx.stage.DirectoryChooser
-import javafx.stage.FileChooser
-import java.awt.Window
 import java.io.File
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import java.util.function.Consumer
 import java.util.prefs.Preferences
 import javax.swing.JComponent
-import javax.swing.SwingUtilities
 
 class FileChooserBuilder: IFileChooserBuilder.Compound {
 
-    private val fileChooser: FileChooser = FileChooser()
-    private val directoryChooser: DirectoryChooser = DirectoryChooser()
-    private val jfxPanel: JFXPanel = JFXPanel()
+    private val javaFxChooserAdapter: IJavaFxChooserAdapter
+    private val fileChooser: IFileChooserAdapter
+    private val directoryChooser: IDirectoryChooserAdapter
     private lateinit var preferences: Preferences
     private var title: String? = null
     private var selectedFile: File? = null
     private var selectedFiles: List<File>? = null
     private var initialDirectory: File? = null
-    private var swingParentWindow: Window? = null
 
     init {
-        Platform.setImplicitExit(false)
+        javaFxChooserAdapter = JavaFxChooserAdapter()
+        fileChooser = FileChooserAdapter(javaFxChooserAdapter)
+        directoryChooser = DirectoryChooserAdapter(javaFxChooserAdapter)
     }
 
     override fun addToSwingParent(addToSwingParentCallback: Consumer<JComponent>?): IFileChooserBuilder {
-        jfxPanel.addHierarchyListener {
-            swingParentWindow = SwingUtilities.getWindowAncestor(jfxPanel)
-            swingParentWindow?.let {
-                Platform.runLater { jfxPanel.scene = Scene(Group()) }
-            }
-        }
-        addToSwingParentCallback?.accept(jfxPanel)
+        javaFxChooserAdapter.addToSwingParent(addToSwingParentCallback)
         return this
     }
 
@@ -64,31 +55,31 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
     }
 
     override fun addExtensionFilter(extensionFilterDescription: String?, extensions: List<String>?): FileChooserBuilder {
-        fileChooser.extensionFilters.add(FileChooser.ExtensionFilter(extensionFilterDescription, extensions))
+        fileChooser.extensionFilters.add(KExtensionFilter(extensionFilterDescription, extensions))
         return this
     }
 
     override fun showSaveDialog(): FileChooserBuilder {
-        selectedFile = showDialog { fileChooser.showSaveDialog(getJfxParentWindow()) }
+        selectedFile = showDialog { fileChooser.showSaveDialog() }
         return this
     }
 
     override fun showOpenFileDialog(): FileChooserBuilder {
-        selectedFile = showDialog { fileChooser.showOpenDialog(getJfxParentWindow()) }
+        selectedFile = showDialog { fileChooser.showOpenDialog() }
         return this
     }
 
     override fun showOpenMultipleFilesDialog(): FileChooserBuilder {
-        selectedFiles = showDialog { fileChooser.showOpenMultipleDialog(getJfxParentWindow()) }
+        selectedFiles = showDialog { fileChooser.showOpenMultipleDialog() }
         return this
     }
 
     override fun showOpenDirectoryDialog(): IFileChooserBuilder.WithDirectory {
-        selectedFile = showDialog { directoryChooser.showDialog(getJfxParentWindow()) }
+        selectedFile = showDialog { directoryChooser.showDialog() }
         return this
     }
 
-    override fun getLowerCaseFileExtension(): String? {
+    override fun getLowerCaseFileExtension(): String {
         fileChooser.selectedExtensionFilter?.extensions
                 ?.takeIf { it.isNotEmpty() }
                 ?.let {
@@ -123,21 +114,10 @@ class FileChooserBuilder: IFileChooserBuilder.Compound {
     }
 
     private fun <T> showDialog(callback: () -> T?): T? {
-        getInitialDirectory()?.let {
-            fileChooser.initialDirectory = it
-            directoryChooser.initialDirectory = it
-        }
-        fileChooser.title = title
-        directoryChooser.title = title
-        return runPlatformTaskAndBlockEdt(callback, swingParentWindow)
+        javaFxChooserAdapter.initialDirectory = initialDirectory ?: preferences["lastChosenDirectory", null] ?. let { File(it) }
+        javaFxChooserAdapter.title = title
+        return callback.invoke()
     }
 
-    private fun getJfxParentWindow(): javafx.stage.Window? {
-        return jfxPanel.scene?.window
-    }
-
-    private fun getInitialDirectory(): File? {
-        return initialDirectory?:preferences["lastChosenDirectory", null]?.let { File(it) }
-    }
 
 }
