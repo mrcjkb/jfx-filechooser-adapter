@@ -17,7 +17,7 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
     private val javaFxChooserAdapter: IJavaFxChooserAdapter
     private val fileChooser: IFileChooserAdapter
     private val directoryChooser: IDirectoryChooserAdapter
-    private lateinit var preferences: Preferences // TODO encapsulate
+    private lateinit var preferences: Preferences
     private val lastChosenDirectoryKey = "lastChosenDirectory"
     private var title: String? = null
     private var selectedFile: File? = null
