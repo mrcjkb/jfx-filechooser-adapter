@@ -1,4 +1,4 @@
-package com.github.mrcjkb.jfxfilechooseradapter.adapter.api
+package com.github.mrcjkb.javafxadapter.api
 
 import java.io.File
 

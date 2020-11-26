@@ -1,8 +1,8 @@
-package com.github.mrcjkb.jfxfilechooseradapter.impl
+package com.github.mrcjkb.javafxadapter.impl
 
-import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IDirectoryChooserAdapter
-import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IJavaFxChooserAdapter
-import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IJavaFxChooserAdapterInternal
+import com.github.mrcjkb.javafxadapter.api.IDirectoryChooserAdapter
+import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapter
+import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapterInternal
 import javafx.stage.DirectoryChooser
 import java.io.File
 

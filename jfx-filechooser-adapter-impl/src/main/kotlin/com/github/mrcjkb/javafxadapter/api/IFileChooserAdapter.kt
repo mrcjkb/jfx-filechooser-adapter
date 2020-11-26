@@ -1,6 +1,6 @@
-package com.github.mrcjkb.jfxfilechooseradapter.adapter.api
+package com.github.mrcjkb.javafxadapter.api
 
-import com.github.mrcjkb.jfxfilechooseradapter.impl.KExtensionFilter
+import com.github.mrcjkb.javafxadapter.impl.KExtensionFilter
 import java.io.File
 
 interface IFileChooserAdapter: IJavaFxChooserAdapter {

@@ -1,15 +1,20 @@
 package com.github.mrcjkb.jfxfilechooseradapter.impl
 
-import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IDirectoryChooserAdapter
-import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IFileChooserAdapter
-import com.github.mrcjkb.jfxfilechooseradapter.adapter.api.IJavaFxChooserAdapter
+import com.github.mrcjkb.javafxadapter.api.IDirectoryChooserAdapter
+import com.github.mrcjkb.javafxadapter.api.IFileChooserAdapter
+import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapter
+import com.github.mrcjkb.javafxadapter.impl.DirectoryChooserAdapter
+import com.github.mrcjkb.javafxadapter.impl.FileChooserAdapter
+import com.github.mrcjkb.javafxadapter.impl.JavaFxChooserAdapter
+import com.github.mrcjkb.javafxadapter.impl.KExtensionFilter
 import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder
 import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder.*
+import com.github.mrcjkb.persistence.api.IDirectoryPersistence
+import com.github.mrcjkb.persistence.impl.DirectoryPersistence
 import java.io.File
 import java.nio.file.InvalidPathException
 import java.nio.file.Path
 import java.util.function.Consumer
-import java.util.prefs.Preferences
 import javax.swing.JComponent
 
 class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName, WithInitialDirectory, WithInitialDirectoryAndInitialFileName, FileChooser, FileAndDirectoryChooser, WithFile, WithFileList, WithDirectory {
@@ -17,8 +22,7 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
     private val javaFxChooserAdapter: IJavaFxChooserAdapter
     private val fileChooser: IFileChooserAdapter
     private val directoryChooser: IDirectoryChooserAdapter
-    private lateinit var preferences: Preferences
-    private val lastChosenDirectoryKey = "lastChosenDirectory"
+    private lateinit var directoryPersistence: IDirectoryPersistence
     private var title: String? = null
     private var selectedFile: File? = null
     private var selectedFiles: List<File>? = null
@@ -39,7 +43,7 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
     }
 
     override fun init(identifier: String?): FileChooserBuilder {
-        preferences = Preferences.userRoot().node(identifier)
+        directoryPersistence = DirectoryPersistence(identifier?:javaClass.name)
         fileChooser.extensionFilters.clear()
         javaFxChooserAdapter.title = null
         javaFxChooserAdapter.initialDirectory = null
@@ -69,25 +73,25 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
 
     override fun showSaveDialog(): FileChooserBuilder {
         selectedFile = showDialog { fileChooser.showSaveDialog() }
-        persistLastChosenDirectory(selectedFile?.parentFile)
+        directoryPersistence.lastChosenDirectory = selectedFile?.parentFile
         return this
     }
 
     override fun showOpenFileDialog(): FileChooserBuilder {
         selectedFile = showDialog { fileChooser.showOpenDialog() }
-        persistLastChosenDirectory(selectedFile?.parentFile)
+        directoryPersistence.lastChosenDirectory = selectedFile?.parentFile
         return this
     }
 
     override fun showOpenMultipleFilesDialog(): FileChooserBuilder {
         selectedFiles = showDialog { fileChooser.showOpenMultipleDialog() }
-        persistLastChosenDirectory(selectedFiles?.takeIf { it.isNotEmpty() }?.get(0)?.parentFile)
+        directoryPersistence.lastChosenDirectory = selectedFiles?.takeIf { it.isNotEmpty() }?.get(0)?.parentFile
         return this
     }
 
     override fun showOpenDirectoryDialog(): FileChooserBuilder {
         selectedFile = showDialog { directoryChooser.showDialog() }
-        persistLastChosenDirectory(selectedFile)
+        directoryPersistence.lastChosenDirectory = selectedFile
         return this
     }
 
@@ -126,14 +130,9 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
     }
 
     private fun <T> showDialog(callback: () -> T?): T? {
-        javaFxChooserAdapter.initialDirectory = javaFxChooserAdapter.initialDirectory ?: preferences[lastChosenDirectoryKey, null] ?. let { File(it) }
+        javaFxChooserAdapter.initialDirectory = javaFxChooserAdapter.initialDirectory ?: directoryPersistence.lastChosenDirectory
         javaFxChooserAdapter.title = title
         return callback.invoke()
     }
 
-    private fun persistLastChosenDirectory(lastChosenDirectory: File?) {
-        lastChosenDirectory
-                ?.takeIf { it.isDirectory }
-                ?.let { preferences.put(lastChosenDirectoryKey, it.absolutePath) }
-    }
 }
