@@ -1,5 +1,5 @@
-module com.github.mrcjkb.jfxfilechooseradapter.demo {
+module mrcjkb.jfxfilechooseradapter.demo {
     requires java.desktop;
-    requires com.github.mrcjkb.jfxfilechooseradapter;
+    requires mrcjkb.jfxfilechooseradapter;
     exports com.github.mrcjkb.jfxfilechooseradapter.demo;
 }

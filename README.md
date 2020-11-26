@@ -29,15 +29,17 @@ To set a Swing parent window, the `IFileChooserBuilder` interface provides the o
 # Contribution
 
 ## Architecture
-This project is split into three main sub-projects
+This project is split into a parent project with three subprojects:
 
 - jfx-filechooser-adapter-parent: Contains the module context, which provides the entry to the API
 - jfx-filechooser-adapter-api: Contains the Java interfaces
 - jfx-filechooser-adapter-impl: Contains the implementation
+- javafx-wrapper: A wrapper for encapsulating JavaFX from the main projects
 
-It is intended that a client accesses only the jfx-filechooser-adapter-parent project directly, which hides the implementations.
+Additionally, the project jfx-filechooser-adapter-demo is included for demonstration purposes.
+
+It is intended that a client accesses only the jfx-filechooser-adapter-parent project directly, which encapsulates the implementations.
 Architecture rules are enforced using [ArchUnit](https://www.archunit.org/).
 
 ## Limitations
-Due to a [bug](https://github.com/openjfx/javafx-gradle-plugin/issues/94) in Gradle JavaFX plugin, no arch unit tests can be added to the jfx-filechooser-adapter-impl project at te moment.
-
+Due to a [bug](https://github.com/openjfx/javafx-gradle-plugin/issues/94) in Gradle JavaFX plugin, no tests can be added to the javafx-wrapper project.
