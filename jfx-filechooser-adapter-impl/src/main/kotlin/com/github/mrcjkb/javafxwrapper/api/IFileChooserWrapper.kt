@@ -1,9 +1,9 @@
-package com.github.mrcjkb.javafxadapter.api
+package com.github.mrcjkb.javafxwrapper.api
 
-import com.github.mrcjkb.javafxadapter.impl.KExtensionFilter
+import com.github.mrcjkb.javafxwrapper.impl.KExtensionFilter
 import java.io.File
 
-interface IFileChooserAdapter: IJavaFxChooserAdapter {
+interface IFileChooserWrapper: IJavaFxChooserWrapper {
 
     val extensionFilters: MutableList<KExtensionFilter>
     var selectedExtensionFilter: KExtensionFilter?

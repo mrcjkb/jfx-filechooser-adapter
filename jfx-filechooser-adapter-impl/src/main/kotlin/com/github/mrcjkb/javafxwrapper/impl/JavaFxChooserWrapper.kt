@@ -1,7 +1,7 @@
-package com.github.mrcjkb.javafxadapter.impl
+package com.github.mrcjkb.javafxwrapper.impl
 
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapterInternal
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapperInternal
 import javafx.application.Platform
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Group
@@ -12,7 +12,7 @@ import java.util.function.Consumer
 import javax.swing.JComponent
 import javax.swing.SwingUtilities
 
-class JavaFxChooserAdapter: IJavaFxChooserAdapterInternal, IJavaFxChooserAdapter {
+class JavaFxChooserWrapper: IJavaFxChooserWrapperInternal, IJavaFxChooserWrapper {
 
     private val jfxPanel: JFXPanel = JFXPanel()
     override var swingParentWindow: Window? = null

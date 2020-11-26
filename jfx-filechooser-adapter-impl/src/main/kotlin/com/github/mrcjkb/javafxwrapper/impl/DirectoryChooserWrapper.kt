@@ -1,12 +1,12 @@
-package com.github.mrcjkb.javafxadapter.impl
+package com.github.mrcjkb.javafxwrapper.impl
 
-import com.github.mrcjkb.javafxadapter.api.IDirectoryChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapterInternal
+import com.github.mrcjkb.javafxwrapper.api.IDirectoryChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapperInternal
 import javafx.stage.DirectoryChooser
 import java.io.File
 
-class DirectoryChooserAdapter(private val javaFxSwingAdapter: IJavaFxChooserAdapterInternal): IDirectoryChooserAdapter, IJavaFxChooserAdapter by javaFxSwingAdapter {
+class DirectoryChooserWrapper(private val javaFxSwingAdapter: IJavaFxChooserWrapperInternal): IDirectoryChooserWrapper, IJavaFxChooserWrapper by javaFxSwingAdapter {
 
     private val directoryChooser: DirectoryChooser = DirectoryChooser()
 

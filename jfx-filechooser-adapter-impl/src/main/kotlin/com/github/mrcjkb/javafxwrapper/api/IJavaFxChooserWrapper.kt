@@ -1,10 +1,10 @@
-package com.github.mrcjkb.javafxadapter.api
+package com.github.mrcjkb.javafxwrapper.api
 
 import java.io.File
 import java.util.function.Consumer
 import javax.swing.JComponent
 
-interface IJavaFxChooserAdapter {
+interface IJavaFxChooserWrapper {
 
     var initialDirectory: File?
     var title: String?

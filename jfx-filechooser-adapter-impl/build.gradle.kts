@@ -22,13 +22,7 @@ dependencies {
   implementation("org.openjfx:javafx-graphics:11.0.2:linux")
   implementation("org.openjfx:javafx-graphics:11.0.2:mac")
   testImplementation("com.tngtech.archunit:archunit-junit5:0.14.1")
-}
-
-java {
-  modularity.inferModulePath.set(true)
-  toolchain {
-    languageVersion.set(JavaLanguageVersion.of(11))
-  }
+  testImplementation("io.kotlintest:kotlintest-runner-junit5:3.4.2")
 }
 
 javafx {

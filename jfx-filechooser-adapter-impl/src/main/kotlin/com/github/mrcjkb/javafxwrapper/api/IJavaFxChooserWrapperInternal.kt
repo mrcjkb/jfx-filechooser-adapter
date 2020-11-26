@@ -1,8 +1,8 @@
-package com.github.mrcjkb.javafxadapter.api
+package com.github.mrcjkb.javafxwrapper.api
 
 import javafx.stage.Window
 
-interface IJavaFxChooserAdapterInternal: IJavaFxChooserAdapter {
+interface IJavaFxChooserWrapperInternal: IJavaFxChooserWrapper {
 
     var swingParentWindow: java.awt.Window?
     var javaFxParentWindow: Window?

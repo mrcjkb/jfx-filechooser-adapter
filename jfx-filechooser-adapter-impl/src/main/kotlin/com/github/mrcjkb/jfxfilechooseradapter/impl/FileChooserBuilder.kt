@@ -1,12 +1,12 @@
 package com.github.mrcjkb.jfxfilechooseradapter.impl
 
-import com.github.mrcjkb.javafxadapter.api.IDirectoryChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IFileChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapter
-import com.github.mrcjkb.javafxadapter.impl.DirectoryChooserAdapter
-import com.github.mrcjkb.javafxadapter.impl.FileChooserAdapter
-import com.github.mrcjkb.javafxadapter.impl.JavaFxChooserAdapter
-import com.github.mrcjkb.javafxadapter.impl.KExtensionFilter
+import com.github.mrcjkb.javafxwrapper.api.IDirectoryChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IFileChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapper
+import com.github.mrcjkb.javafxwrapper.impl.DirectoryChooserWrapper
+import com.github.mrcjkb.javafxwrapper.impl.FileChooserWrapper
+import com.github.mrcjkb.javafxwrapper.impl.JavaFxChooserWrapper
+import com.github.mrcjkb.javafxwrapper.impl.KExtensionFilter
 import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder
 import com.github.mrcjkb.jfxfilechooseradapter.api.IFileChooserBuilder.*
 import com.github.mrcjkb.persistence.api.IDirectoryPersistence
@@ -19,22 +19,22 @@ import javax.swing.JComponent
 
 class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName, WithInitialDirectory, WithInitialDirectoryAndInitialFileName, FileChooser, FileAndDirectoryChooser, WithFile, WithFileList, WithDirectory {
 
-    private val javaFxChooserAdapter: IJavaFxChooserAdapter
-    private val fileChooser: IFileChooserAdapter
-    private val directoryChooser: IDirectoryChooserAdapter
+    private val javaFxChooserWrapper: IJavaFxChooserWrapper
+    private val fileChooser: IFileChooserWrapper
+    private val directoryChooser: IDirectoryChooserWrapper
     private lateinit var directoryPersistence: IDirectoryPersistence
     private var title: String? = null
     private var selectedFile: File? = null
     private var selectedFiles: List<File>? = null
 
     init {
-        javaFxChooserAdapter = JavaFxChooserAdapter()
-        fileChooser = FileChooserAdapter(javaFxChooserAdapter)
-        directoryChooser = DirectoryChooserAdapter(javaFxChooserAdapter)
+        javaFxChooserWrapper = JavaFxChooserWrapper()
+        fileChooser = FileChooserWrapper(javaFxChooserWrapper)
+        directoryChooser = DirectoryChooserWrapper(javaFxChooserWrapper)
     }
 
     override fun addToSwingParent(addToSwingParentCallback: Consumer<JComponent>?): IFileChooserBuilder {
-        javaFxChooserAdapter.addToSwingParent(addToSwingParentCallback)
+        javaFxChooserWrapper.addToSwingParent(addToSwingParentCallback)
         return this
     }
 
@@ -45,14 +45,14 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
     override fun init(identifier: String?): FileChooserBuilder {
         directoryPersistence = DirectoryPersistence(identifier?:javaClass.name)
         fileChooser.extensionFilters.clear()
-        javaFxChooserAdapter.title = null
-        javaFxChooserAdapter.initialDirectory = null
+        javaFxChooserWrapper.title = null
+        javaFxChooserWrapper.initialDirectory = null
         fileChooser.initialFileName = null
         return this
     }
 
     override fun withInitialDirectory(initialDirectory: File?): FileChooserBuilder {
-        javaFxChooserAdapter.initialDirectory = initialDirectory
+        javaFxChooserWrapper.initialDirectory = initialDirectory
         return this
     }
 
@@ -130,8 +130,8 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
     }
 
     private fun <T> showDialog(callback: () -> T?): T? {
-        javaFxChooserAdapter.initialDirectory = javaFxChooserAdapter.initialDirectory ?: directoryPersistence.lastChosenDirectory
-        javaFxChooserAdapter.title = title
+        javaFxChooserWrapper.initialDirectory = javaFxChooserWrapper.initialDirectory ?: directoryPersistence.lastChosenDirectory
+        javaFxChooserWrapper.title = title
         return callback.invoke()
     }
 

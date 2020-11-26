@@ -1,12 +1,12 @@
-package com.github.mrcjkb.javafxadapter.impl
+package com.github.mrcjkb.javafxwrapper.impl
 
-import com.github.mrcjkb.javafxadapter.api.IFileChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapter
-import com.github.mrcjkb.javafxadapter.api.IJavaFxChooserAdapterInternal
+import com.github.mrcjkb.javafxwrapper.api.IFileChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapper
+import com.github.mrcjkb.javafxwrapper.api.IJavaFxChooserWrapperInternal
 import javafx.stage.FileChooser
 import java.io.File
 
-class FileChooserAdapter(private val javaFxSwingAdapter: IJavaFxChooserAdapterInternal, override val extensionFilters: MutableList<KExtensionFilter> = mutableListOf()) : IFileChooserAdapter, IJavaFxChooserAdapter by javaFxSwingAdapter {
+class FileChooserWrapper(private val javaFxSwingAdapter: IJavaFxChooserWrapperInternal, override val extensionFilters: MutableList<KExtensionFilter> = mutableListOf()) : IFileChooserWrapper, IJavaFxChooserWrapper by javaFxSwingAdapter {
 
     private val fileChooser: FileChooser = FileChooser()
     override var selectedExtensionFilter: KExtensionFilter? = null

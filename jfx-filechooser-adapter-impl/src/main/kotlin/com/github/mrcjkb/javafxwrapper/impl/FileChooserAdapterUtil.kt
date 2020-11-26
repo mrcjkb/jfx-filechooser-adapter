@@ -1,4 +1,4 @@
-package com.github.mrcjkb.javafxadapter.impl
+package com.github.mrcjkb.javafxwrapper.impl
 
 import javafx.application.Platform
 import java.awt.Dialog
