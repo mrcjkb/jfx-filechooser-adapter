@@ -7,6 +7,6 @@ import com.github.mrcjkb.jfxfilechooseradapter.impl.FileChooserBuilder;
 public class JfxFileChooserAdapterModuleContext implements IJfxFileChooserAdapterModuleContext {
     @Override
     public IFileChooserBuilder getFileChooserBuilder() {
-        return new FileChooserBuilder();
+        return FileChooserBuilder.Companion.createFileChooserBuilder();
     }
 }

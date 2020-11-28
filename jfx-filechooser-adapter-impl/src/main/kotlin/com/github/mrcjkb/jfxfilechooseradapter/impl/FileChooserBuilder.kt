@@ -17,21 +17,16 @@ import java.nio.file.Path
 import java.util.function.Consumer
 import javax.swing.JComponent
 
-class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName, WithInitialDirectory, WithInitialDirectoryAndInitialFileName, FileChooser, FileAndDirectoryChooser, WithFile, WithFileList, WithDirectory {
+class FileChooserBuilder(
+            private val javaFxChooserWrapper: IJavaFxChooserWrapper,
+            private val fileChooser: IFileChooserWrapper,
+            private val directoryChooser: IDirectoryChooserWrapper
+        ): IFileChooserBuilder, Initialised, WithInitialFileName, WithInitialDirectory, WithInitialDirectoryAndInitialFileName, FileChooser, FileAndDirectoryChooser, WithFile, WithFileList, WithDirectory {
 
-    private val javaFxChooserWrapper: IJavaFxChooserWrapper
-    private val fileChooser: IFileChooserWrapper
-    private val directoryChooser: IDirectoryChooserWrapper
     private lateinit var directoryPersistence: IDirectoryPersistence
     private var title: String? = null
     private var selectedFile: File? = null
     private var selectedFiles: List<File>? = null
-
-    init {
-        javaFxChooserWrapper = JavaFxChooserWrapper()
-        fileChooser = FileChooserWrapper(javaFxChooserWrapper)
-        directoryChooser = DirectoryChooserWrapper(javaFxChooserWrapper)
-    }
 
     override fun addToSwingParent(addToSwingParentCallback: Consumer<JComponent>?): IFileChooserBuilder {
         javaFxChooserWrapper.addToSwingParent(addToSwingParentCallback)
@@ -133,6 +128,26 @@ class FileChooserBuilder: IFileChooserBuilder, Initialised, WithInitialFileName,
         javaFxChooserWrapper.initialDirectory = javaFxChooserWrapper.initialDirectory ?: directoryPersistence.lastChosenDirectory
         javaFxChooserWrapper.title = title
         return callback.invoke()
+    }
+
+    companion object {
+        fun createFileChooserBuilder(): IFileChooserBuilder {
+            val javaFxChooserWrapper = JavaFxChooserWrapper()
+            val fileChooser = FileChooserWrapper(javaFxChooserWrapper)
+            val directoryChooser = DirectoryChooserWrapper(javaFxChooserWrapper)
+            return createFileChooserBuilder(javaFxChooserWrapper, fileChooser, directoryChooser)
+        }
+
+        /**
+         * Provided for tests
+         */
+        fun createFileChooserBuilder(
+                javaFxChooserWrapper: IJavaFxChooserWrapper,
+                fileChooserWrapper: IFileChooserWrapper,
+                directoryChooserWrapper: IDirectoryChooserWrapper
+        ): IFileChooserBuilder {
+            return FileChooserBuilder(javaFxChooserWrapper, fileChooserWrapper, directoryChooserWrapper)
+        }
     }
 
 }
