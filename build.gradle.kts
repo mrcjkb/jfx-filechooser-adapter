@@ -66,45 +66,49 @@ signing {
   sign(configurations.archives.get())
 }
 
+val allProjects = listOf(rootProject) + subprojects
+
 publishing {
   publications {
-    create<MavenPublication>("maven") {
-      groupId = group.toString()
-      artifactId = rootProject.name
-      version = version
-      from(components["java"])
-      versionMapping {
-        usage("java-api") {
-          fromResolutionOf("runtimeClasspath")
-        }
-        usage("java-runtime") {
-          fromResolutionResult()
-        }
-      }
-      pom {
-        name.set(rootProject.name)
-        description.set(rootProject.description)
-        url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
-        developers() {
-          developer {
-            id.set("MrcJkb")
-            name.set("Marc Jakobi")
+    allProjects.forEach {
+      create<MavenPublication>(it.name) {
+        groupId = group.toString()
+        artifactId = rootProject.name
+        version = version
+        from(components["java"])
+        versionMapping {
+          usage("java-api") {
+            fromResolutionOf("runtimeClasspath")
+          }
+          usage("java-runtime") {
+            fromResolutionResult()
           }
         }
-        issueManagement {
-          system.set("GitHub")
-          url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/issues")
-        }
-        scm {
+        pom {
+          name.set(rootProject.name)
+          description.set(rootProject.description)
           url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
-          connection.set("scm:git:git@github.com:MrcJkb/jfx-filechooser-adapter.git")
-          developerConnection.set("scm:git:ssh://git@github.com:MrcJkb/jfx-filechooser-adapter.git")
-        }
-        licenses {
-          license {
-            name.set("GPLv2 with Classpath Exception")
-            url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/blob/main/LICENSE")
-            distribution.set("repo")
+          developers() {
+            developer {
+              id.set("MrcJkb")
+              name.set("Marc Jakobi")
+            }
+          }
+          issueManagement {
+            system.set("GitHub")
+            url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/issues")
+          }
+          scm {
+            url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
+            connection.set("scm:git:git@github.com:MrcJkb/jfx-filechooser-adapter.git")
+            developerConnection.set("scm:git:ssh://git@github.com:MrcJkb/jfx-filechooser-adapter.git")
+          }
+          licenses {
+            license {
+              name.set("GPLv2 with Classpath Exception")
+              url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/blob/main/LICENSE")
+              distribution.set("repo")
+            }
           }
         }
       }
@@ -112,19 +116,21 @@ publishing {
   }
   repositories {
     maven {
-      val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-      val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+      val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
       url = if (version.toString().contains("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
       credentials {
-        username=project.properties["ossrhUser"].toString()
-        password=project.properties["ossrhPassword"].toString()
+        username = project.properties["ossrhUser"].toString()
+        password = project.properties["ossrhPassword"].toString()
       }
     }
   }
 }
 
 signing {
-  sign(publishing.publications["maven"])
+  allProjects.forEach {
+    publishing.publications[it.name]
+  }
 }
 
 tasks.javadoc {
