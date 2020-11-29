@@ -1,6 +1,5 @@
 import java.text.SimpleDateFormat
 import java.util.*
-import org.gradle.api.publish.maven.MavenPom
 
 plugins {
   java
@@ -35,6 +34,8 @@ java {
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(11))
   }
+  withJavadocJar()
+  withSourcesJar()
 }
 
 tasks.test {
@@ -59,24 +60,10 @@ tasks.jar {
     attributes["Build-Jdk"] = "$javaVersion ($javaVendor $javaVmVersion)"
     attributes["Build-OS"] = "$osName $osArchitecture $osVersion"
   }
-  from(configurations.compile.get()
-          .onEach { println("add from dependencies: ${it.name}") }
-          .map { if (it.isDirectory) it else zipTree(it) })
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("sources")
-  from(sourceSets.main.get().allSource)
-}
-
-val javadocJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("javadoc")
-  from(tasks["javadoc"])
-}
-
-artifacts {
-  add("archives", sourcesJar)
-  add("archives", javadocJar)
+signing {
+  sign(configurations.archives.get())
 }
 
 publishing {
@@ -85,40 +72,63 @@ publishing {
       groupId = group.toString()
       artifactId = rootProject.name
       version = version
-      customizePom(pom)
       from(components["java"])
-      artifact(sourcesJar.get())
-      artifact(javadocJar.get())
+      versionMapping {
+        usage("java-api") {
+          fromResolutionOf("runtimeClasspath")
+        }
+        usage("java-runtime") {
+          fromResolutionResult()
+        }
+      }
+      pom {
+        name.set(rootProject.name)
+        description.set(rootProject.description)
+        url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
+        developers() {
+          developer {
+            id.set("MrcJkb")
+            name.set("Marc Jakobi")
+          }
+        }
+        issueManagement {
+          system.set("GitHub")
+          url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/issues")
+        }
+        scm {
+          url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
+          connection.set("scm:git:git@github.com:MrcJkb/jfx-filechooser-adapter.git")
+          developerConnection.set("scm:git:ssh://git@github.com:MrcJkb/jfx-filechooser-adapter.git")
+        }
+        licenses {
+          license {
+            name.set("GPLv2 with Classpath Exception")
+            url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/blob/main/LICENSE")
+            distribution.set("repo")
+          }
+        }
+      }
+    }
+  }
+  repositories {
+    maven {
+      val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+      val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots")
+      url = if (version.toString().contains("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+      credentials {
+        username=project.properties["ossrhUser"].toString()
+        password=project.properties["ossrhPassword"].toString()
+      }
     }
   }
 }
 
-fun customizePom(pom: MavenPom) {
-  with (pom) {
-    name.set(rootProject.name)
-    description.set(rootProject.description)
-    url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
-    developers() {
-      developer {
-        id.set("MrcJkb")
-        name.set("Marc Jakobi")
-      }
-    }
-    issueManagement {
-      system.set("GitHub")
-      url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/issues")
-    }
-    scm {
-      url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
-      connection.set("scm:git:git@github.com:MrcJkb/jfx-filechooser-adapter.git")
-      developerConnection.set("scm:git:ssh://git@github.com:MrcJkb/jfx-filechooser-adapter.git")
-    }
-    licenses {
-      license {
-        name.set("GPLv2 with Classpath Exception")
-        url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/blob/main/LICENSE")
-        distribution.set("repo")
-      }
-    }
+signing {
+  sign(publishing.publications["maven"])
+}
+
+tasks.javadoc {
+  if (JavaVersion.current().isJava9Compatible) {
+    (options as StandardJavadocDocletOptions).addBooleanOption("html5", true)
   }
 }
