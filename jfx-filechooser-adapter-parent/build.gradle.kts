@@ -6,12 +6,18 @@ plugins {
   java
   idea
   id ("java-library")
+  id("com.palantir.git-version") version "0.12.3"
   `maven-publish`
   signing
 }
 
 group = "com.github.mrcjkb"
 
+val gitVersion: groovy.lang.Closure<String> by extra
+
+allprojects {
+  version = gitVersion().replace(".dirty", "").replace("-", ".")
+}
 
 repositories {
   mavenCentral()
