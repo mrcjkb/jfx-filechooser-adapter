@@ -5,6 +5,7 @@ plugins {
   kotlin("jvm") version "1.4.10"
   id("org.jetbrains.kotlin.plugin.jpa") version "1.4.10"
   id("org.jetbrains.kotlin.plugin.noarg") version "1.4.10"
+  `maven-publish`
 }
 
 group = "com.github.mrcjkb"
@@ -32,7 +33,6 @@ java {
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(11))
   }
-  withJavadocJar()
   withSourcesJar()
 }
 

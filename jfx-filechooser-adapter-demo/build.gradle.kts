@@ -6,7 +6,6 @@ plugins {
   idea
   id ("java-library")
   `maven-publish`
-  signing
 }
 
 group = "com.github.mrcjkb"

@@ -2,6 +2,7 @@ plugins {
   java
   idea
   id ("java-library")
+  `maven-publish`
 }
 
 group = "com.github.mrcjkb"
