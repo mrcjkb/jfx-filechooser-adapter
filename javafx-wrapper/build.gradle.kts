@@ -32,6 +32,7 @@ val fakeJavadocJar by tasks.creating(Jar::class) {
   manifest {
     attributes["Info"] = "This is a Kotlin project and contains no Javadoc."
   }
+  archiveClassifier.set("javadoc")
 }
 
 java {

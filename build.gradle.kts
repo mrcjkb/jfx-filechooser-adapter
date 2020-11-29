@@ -92,6 +92,10 @@ fun configurePublication(project: Project) {
         artifactId = project.name
         version = version
         from(project.components["java"])
+        project.tasks.findByName("fakeJavadocJar")?.let {
+          // Add fake javadoc Jar for Kotlin projects.
+          artifact(it)
+        }
         versionMapping {
           usage("java-api") {
             fromResolutionOf("runtimeClasspath")
@@ -142,7 +146,7 @@ fun configurePublication(project: Project) {
     }
   }
   signing {
-    publishing.publications[project.name]
+    sign(publishing.publications[project.name])
   }
 }
 
