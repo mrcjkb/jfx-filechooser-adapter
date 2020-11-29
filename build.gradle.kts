@@ -15,7 +15,10 @@ group = "com.github.mrcjkb"
 val gitVersion: groovy.lang.Closure<String> by extra
 
 allprojects {
-  version = gitVersion().replace(".dirty", "").replace("-", ".")
+  version = gitVersion()
+          .replace(".dirty", "")
+          .replace("-", ".")
+          .replaceAfter("SNAPSHOT", "")
   description = "JavaFX FileChooser and DirectoryChooser adapter that can be used in a Swing application."
 }
 
@@ -67,15 +70,16 @@ signing {
 }
 
 val allProjects = listOf(rootProject) + subprojects
+val isReleaseVersion = !version.toString().endsWith("SNAPSHOT")
 
 publishing {
   publications {
     allProjects.forEach {
       create<MavenPublication>(it.name) {
         groupId = group.toString()
-        artifactId = rootProject.name
+        artifactId = it.name
         version = version
-        from(components["java"])
+        from(it.components["java"])
         versionMapping {
           usage("java-api") {
             fromResolutionOf("runtimeClasspath")
@@ -85,8 +89,8 @@ publishing {
           }
         }
         pom {
-          name.set(rootProject.name)
-          description.set(rootProject.description)
+          name.set(it.name)
+          description.set(it.description)
           url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
           developers() {
             developer {
@@ -118,10 +122,10 @@ publishing {
     maven {
       val releasesRepoUrl = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
       val snapshotsRepoUrl = uri("https://oss.sonatype.org/content/repositories/snapshots/")
-      url = if (version.toString().contains("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+      url = if (isReleaseVersion) releasesRepoUrl else snapshotsRepoUrl
       credentials {
-        username = project.properties["ossrhUser"].toString()
-        password = project.properties["ossrhPassword"].toString()
+        username = project.properties["ossrhUser"]?.toString() ?: "Unknown user"
+        password = project.properties["ossrhPassword"]?.toString() ?: "Unknown password"
       }
     }
   }
