@@ -37,3 +37,6 @@ gradle-app.setting
 .gradletasknamecache
 
 .idea
+
+gradle.properties
+secret.gpg
