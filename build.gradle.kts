@@ -17,6 +17,7 @@ val gitVersion: groovy.lang.Closure<String> by extra
 
 allprojects {
   version = gitVersion().replace(".dirty", "").replace("-", ".")
+  description = "JavaFX FileChooser and DirectoryChooser adapter that can be used in a Swing application."
 }
 
 repositories {
@@ -97,6 +98,12 @@ fun customizePom(pom: MavenPom) {
     name.set(rootProject.name)
     description.set(rootProject.description)
     url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
+    developers() {
+      developer {
+        id.set("MrcJkb")
+        name.set("Marc Jakobi")
+      }
+    }
     issueManagement {
       system.set("GitHub")
       url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/issues")
@@ -105,6 +112,13 @@ fun customizePom(pom: MavenPom) {
       url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/")
       connection.set("scm:git:git@github.com:MrcJkb/jfx-filechooser-adapter.git")
       developerConnection.set("scm:git:ssh://git@github.com:MrcJkb/jfx-filechooser-adapter.git")
+    }
+    licenses {
+      license {
+        name.set("GPLv2 with Classpath Exception")
+        url.set("https://github.com/MrcJkb/jfx-filechooser-adapter/blob/main/LICENSE")
+        distribution.set("repo")
+      }
     }
   }
 }
