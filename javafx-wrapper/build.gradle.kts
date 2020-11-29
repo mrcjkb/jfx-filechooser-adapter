@@ -28,12 +28,19 @@ dependencies {
   implementation("org.openjfx:javafx-graphics:11.0.2:mac")
 }
 
+val fakeJavadocJar by tasks.creating(Jar::class) {
+  manifest {
+    attributes["Info"] = "This is a Kotlin project and contains no Javadoc."
+  }
+}
+
 java {
   modularity.inferModulePath.set(true)
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(11))
   }
   withSourcesJar()
+  artifacts.add("archives", fakeJavadocJar)
 }
 
 javafx {

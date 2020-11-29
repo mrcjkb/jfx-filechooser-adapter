@@ -29,12 +29,19 @@ dependencies {
   testImplementation("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
 }
 
+val fakeJavadocJar by tasks.creating(Jar::class) {
+  manifest {
+    attributes["Info"] = "This is a Kotlin project and contains no Javadoc."
+  }
+}
+
 java {
   modularity.inferModulePath.set(true)
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(11))
   }
   withSourcesJar()
+  artifacts.add("archives", fakeJavadocJar)
 }
 
 tasks.test {
