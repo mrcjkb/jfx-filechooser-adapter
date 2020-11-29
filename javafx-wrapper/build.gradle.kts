@@ -32,6 +32,8 @@ java {
   toolchain {
     languageVersion.set(JavaLanguageVersion.of(11))
   }
+  withJavadocJar()
+  withSourcesJar()
 }
 
 javafx {
