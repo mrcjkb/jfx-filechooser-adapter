@@ -146,7 +146,9 @@ fun configurePublication(project: Project) {
     }
   }
   signing {
-    sign(publishing.publications[project.name])
+    if (isReleaseVersion) {
+      sign(publishing.publications[project.name])
+    }
   }
 }
 
