@@ -1,6 +1,8 @@
 # jfx-filechooser-adapter
 An adapter for a JavaFX File- and DirectoryChooser that allows for use in Swing
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.mrcjkb/jfx-filechooser-adapter/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.mrcjkb/jfx-filechooser-adapter)
+
 # Requirements
 
 - Java 11
