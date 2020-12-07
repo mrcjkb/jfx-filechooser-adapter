@@ -11,7 +11,7 @@ plugins {
 
 tasks.compileJava {
   // Workaround for adding the src/kotlin classes to the java modulepath
-  options.compilerArgs = listOf("--patch-module", "mrcjkb.jfxfilechooseradapter.impl=${sourceSets.main.get().output.asPath}")
+  options.compilerArgs = listOf("--patch-module", "com.github.mrcjkb.jfxfilechooseradapter.impl=${sourceSets.main.get().output.asPath}")
 }
 
 repositories {

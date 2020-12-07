@@ -55,21 +55,6 @@ tasks.jar {
           .map { if (it.isDirectory) it else zipTree(it) })
 }
 
-val sourcesJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("sources")
-  from(sourceSets.main.get().allSource)
-}
-
-val javadocJar by tasks.registering(Jar::class) {
-  archiveClassifier.set("javadoc")
-  from(tasks["javadoc"])
-}
-
-artifacts {
-  add("archives", sourcesJar)
-  add("archives", javadocJar)
-}
-
 publishing {
   publications {
     create<MavenPublication>("maven") {
@@ -77,8 +62,6 @@ publishing {
       artifactId = rootProject.name
       version = version
       from(components["java"])
-      artifact(sourcesJar.get())
-      artifact(javadocJar.get())
     }
   }
 }

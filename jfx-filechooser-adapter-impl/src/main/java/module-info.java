@@ -1,7 +1,7 @@
-module mrcjkb.jfxfilechooseradapter.impl {
+module com.github.mrcjkb.jfxfilechooseradapter.impl {
     exports com.github.mrcjkb.jfxfilechooseradapter.impl;
-    requires mrcjkb.jfxfilechooseradapter.api;
-    requires mrcjkb.javafxwrapper;
+    requires com.github.mrcjkb.jfxfilechooseradapter.api;
+    requires com.github.mrcjkb.javafxwrapper;
     requires kotlin.stdlib;
     requires java.prefs;
     requires java.desktop;

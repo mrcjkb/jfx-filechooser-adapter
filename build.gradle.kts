@@ -65,10 +65,6 @@ tasks.jar {
   }
 }
 
-signing {
-  sign(configurations.archives.get())
-}
-
 val isReleaseVersion = !version.toString().endsWith("SNAPSHOT")
 
 configurePublication(rootProject)
@@ -146,7 +142,9 @@ fun configurePublication(project: Project) {
     }
   }
   signing {
-    sign(publishing.publications[project.name])
+    if (isReleaseVersion) {
+      sign(publishing.publications[project.name])
+    }
   }
 }
 
