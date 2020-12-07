@@ -1,4 +1,4 @@
-module mrcjkb.javafxwrapper {
+module com.github.mrcjkb.javafxwrapper {
     exports com.github.mrcjkb.javafxwrapper.api;
     exports com.github.mrcjkb.javafxwrapper.impl;
     requires javafx.base;
