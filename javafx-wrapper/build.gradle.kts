@@ -17,7 +17,7 @@ repositories {
 
 // TODO re-enable when javafx plugin bug that forces everything on the module path is fixed
 //tasks.compileJava {
-//  options.compilerArgs = listOf("--patch-module", "mrcjkb.javafxwrapper=${sourceSets.main.get().output.asPath}")
+//  options.compilerArgs = listOf("--patch-module", "com.github.mrcjkb.javafxwrapper=${sourceSets.main.get().output.asPath}")
 //}
 
 dependencies {
