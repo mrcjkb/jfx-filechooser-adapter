@@ -36,6 +36,10 @@ class JavaFxChooserWrapper: IJavaFxChooserWrapperInternal, IJavaFxChooserWrapper
             }
 
             override fun addToSwingParent(addToSwingParentCallback: Consumer<JComponent>?) {
+                if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+                    // There is a bug that causes dialogs to disappear behind the parent on MacOS.
+                    return
+                }
                 jfxPanel.addHierarchyListener {
                     swingParentWindow = SwingUtilities.getWindowAncestor(jfxPanel)
                     swingParentWindow?.let {
