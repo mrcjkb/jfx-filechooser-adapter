@@ -46,7 +46,7 @@ java {
 }
 
 javafx {
-  version = "11"
+  version = "11.0.2"
   modules = listOf("javafx.base", "javafx.graphics", "javafx.swing")
 }
 
