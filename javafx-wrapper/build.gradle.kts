@@ -31,7 +31,6 @@ dependencies {
 val fakeJavadocJar by tasks.creating(Jar::class) {
   manifest {
     attributes["Info"] = "This is a Kotlin project and contains no Javadoc."
-    attributes["Automatic-Module-Name"] = "com.github.mrcjkb.javafxwrapper"
   }
   archiveClassifier.set("javadoc")
 }
