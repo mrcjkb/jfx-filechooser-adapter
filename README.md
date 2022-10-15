@@ -1,4 +1,12 @@
 # jfx-filechooser-adapter
+
+> [![Maintenance](https://img.shields.io/badge/Maintained%3F-no-red.svg)](https://bitbucket.org/lbesson/ansi-colors)
+> 
+> __NOTE:__
+>
+> Since I hardly work with Java anymore, I will no longer actively maintain this repository.
+> I will gladly review any PRs.
+
 An adapter for a JavaFX File- and DirectoryChooser that allows for use in Swing
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.mrcjkb/jfx-filechooser-adapter.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.mrcjkb%22%20AND%20a:%22jfx-filechooser-adapter%22)
